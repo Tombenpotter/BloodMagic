@@ -27,7 +27,7 @@ public class TileDemonCrucible extends TileInventory implements ITickable, IDemo
     public HashMap<EnumDemonWillType, Double> willMap = new HashMap<EnumDemonWillType, Double>();
     public final int maxWill = 100;
     public final double maxTransferPerTick = 1;
-    public final double thresholdFill = 0.0;
+    public final double thresholdFill = 0.01;
     public final double gemDrainRate = 10;
 
     public int internalCounter = 0;
@@ -63,9 +63,6 @@ public class TileDemonCrucible extends TileInventory implements ITickable, IDemo
                     conduitList.add(newPos.subtract(getPos()));
                 }
             }
-
-            System.out.println("List size: " + conduitList.size());
-            System.out.println("Current amount: " + getCurrentWill(EnumDemonWillType.DEFAULT));
         }
 
         internalCounter++;
@@ -79,19 +76,22 @@ public class TileDemonCrucible extends TileInventory implements ITickable, IDemo
                 if (stack.getItem() instanceof IDemonWillGem)
                 {
                     IDemonWillGem gemItem = (IDemonWillGem) stack.getItem();
-                    if (willMap.containsKey(EnumDemonWillType.DEFAULT))
+                    for (EnumDemonWillType type : EnumDemonWillType.values())
                     {
-                        double current = willMap.get(EnumDemonWillType.DEFAULT);
-                        double fillAmount = Math.min(gemDrainRate, Math.min(current, gemItem.getMaxWill(stack) - gemItem.getWill(stack)));
-                        if (fillAmount > 0)
+                        if (willMap.containsKey(type))
                         {
-                            gemItem.setWill(stack, fillAmount + gemItem.getWill(stack));
-                            if (willMap.get(EnumDemonWillType.DEFAULT) - fillAmount <= 0)
+                            double current = willMap.get(type);
+                            double fillAmount = Math.min(gemDrainRate, current);
+                            if (fillAmount > 0)
                             {
-                                willMap.remove(EnumDemonWillType.DEFAULT);
-                            } else
-                            {
-                                willMap.put(EnumDemonWillType.DEFAULT, willMap.get(EnumDemonWillType.DEFAULT) - fillAmount);
+                                fillAmount = gemItem.fillWill(type, stack, fillAmount);
+                                if (willMap.get(type) - fillAmount <= 0)
+                                {
+                                    willMap.remove(type);
+                                } else
+                                {
+                                    willMap.put(type, willMap.get(type) - fillAmount);
+                                }
                             }
                         }
                     }
@@ -105,16 +105,19 @@ public class TileDemonCrucible extends TileInventory implements ITickable, IDemo
                 if (stack.getItem() instanceof IDemonWillGem)
                 {
                     IDemonWillGem gemItem = (IDemonWillGem) stack.getItem();
-                    if (!willMap.containsKey(EnumDemonWillType.DEFAULT))
+                    for (EnumDemonWillType type : EnumDemonWillType.values())
                     {
-                        willMap.put(EnumDemonWillType.DEFAULT, 0d);
-                    }
+                        if (!willMap.containsKey(type))
+                        {
+                            willMap.put(type, 0d);
+                        }
 
-                    if (willMap.get(EnumDemonWillType.DEFAULT) < maxWill)
-                    {
-                        double drainAmount = Math.min(maxWill - willMap.get(EnumDemonWillType.DEFAULT), gemDrainRate);
-                        double drained = gemItem.drainWill(stack, drainAmount);
-                        willMap.put(EnumDemonWillType.DEFAULT, willMap.get(EnumDemonWillType.DEFAULT) + drained);
+                        if (willMap.get(type) < maxWill)
+                        {
+                            double drainAmount = Math.min(maxWill - willMap.get(type), gemDrainRate);
+                            double drained = gemItem.drainWill(type, stack, drainAmount);
+                            willMap.put(type, willMap.get(type) + drained);
+                        }
                     }
                 }
             }
@@ -192,9 +195,13 @@ public class TileDemonCrucible extends TileInventory implements ITickable, IDemo
                             transfer = conduit.fillDemonWill(type, transfer, false);
                             if (transfer > 0)
                             {
+                                worldObj.markBlockForUpdate(((TileEntity) conduit).getPos());
                                 conduit.fillDemonWill(type, transfer, true);
                                 currentAmount -= transfer;
                                 transfered += transfer;
+                            } else
+                            {
+                                conduitIterator.remove();
                             }
                         }
 

@@ -1,5 +1,6 @@
 package WayofTime.bloodmagic.registry;
 
+import WayofTime.bloodmagic.block.BlockBloodRune;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -81,12 +82,15 @@ public class ModRecipes
         GameRegistry.addRecipe(new ShapedBloodOrbRecipe(new ItemStack(ModBlocks.incenseAltar), "s s", "shs", "coc", 'o', OrbRegistry.getOrbStack(ModItems.orbWeak), 's', "stone", 'c', "cobblestone", 'h', new ItemStack(Items.coal, 1, 1)));
         GameRegistry.addRecipe(new ShapelessBloodOrbRecipe(new ItemStack(ModBlocks.pathBlock, 4, 0), "plankWood", "plankWood", "plankWood", "plankWood", OrbRegistry.getOrbStack(ModItems.orbApprentice)));
         GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModBlocks.pathBlock, 4, 1), new ItemStack(ModBlocks.pathBlock, 1, 0), new ItemStack(ModBlocks.pathBlock, 1, 0), new ItemStack(ModBlocks.pathBlock, 1, 0), new ItemStack(ModBlocks.pathBlock, 1, 0)));
-        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModBlocks.pathBlock, 4, 2), "stone", "stone", "stone", "stone", OrbRegistry.getOrbStack(ModItems.orbMagician)));
+        GameRegistry.addRecipe(new ShapelessBloodOrbRecipe(new ItemStack(ModBlocks.pathBlock, 4, 2), "stone", "stone", "stone", "stone", OrbRegistry.getOrbStack(ModItems.orbMagician)));
         GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModBlocks.pathBlock, 4, 3), new ItemStack(ModBlocks.pathBlock, 1, 2), new ItemStack(ModBlocks.pathBlock, 1, 2), new ItemStack(ModBlocks.pathBlock, 1, 2), new ItemStack(ModBlocks.pathBlock, 1, 2)));
-        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModBlocks.pathBlock, 4, 4), new ItemStack(ModBlocks.pathBlock, 1, 2), new ItemStack(ModBlocks.pathBlock, 1, 2), new ItemStack(ModBlocks.pathBlock, 1, 2), new ItemStack(ModBlocks.pathBlock, 1, 2), OrbRegistry.getOrbStack(ModItems.orbMagician)));
+        GameRegistry.addRecipe(new ShapelessBloodOrbRecipe(new ItemStack(ModBlocks.pathBlock, 4, 4), new ItemStack(ModBlocks.pathBlock, 1, 2), new ItemStack(ModBlocks.pathBlock, 1, 2), new ItemStack(ModBlocks.pathBlock, 1, 2), new ItemStack(ModBlocks.pathBlock, 1, 2), OrbRegistry.getOrbStack(ModItems.orbMaster)));
         GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModBlocks.pathBlock, 4, 5), new ItemStack(ModBlocks.pathBlock, 1, 4), new ItemStack(ModBlocks.pathBlock, 1, 4), new ItemStack(ModBlocks.pathBlock, 1, 4), new ItemStack(ModBlocks.pathBlock, 1, 4)));
-        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModBlocks.pathBlock, 4, 6), Blocks.obsidian, Blocks.obsidian, Blocks.obsidian, Blocks.obsidian, OrbRegistry.getOrbStack(ModItems.orbMagician)));
+        GameRegistry.addRecipe(new ShapelessBloodOrbRecipe(new ItemStack(ModBlocks.pathBlock, 4, 6), Blocks.obsidian, Blocks.obsidian, Blocks.obsidian, Blocks.obsidian, OrbRegistry.getOrbStack(ModItems.orbArchmage)));
         GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModBlocks.pathBlock, 4, 7), new ItemStack(ModBlocks.pathBlock, 1, 6), new ItemStack(ModBlocks.pathBlock, 1, 6), new ItemStack(ModBlocks.pathBlock, 1, 6), new ItemStack(ModBlocks.pathBlock, 1, 6)));
+
+        for (int i = 1; i < BlockBloodRune.names.length; i++)
+            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModBlocks.bloodRune), new ItemStack(ModBlocks.bloodRune, 1, i)));
     }
 
     public static void addAltarRecipes()
@@ -202,6 +206,8 @@ public class ModRecipes
         TartaricForgeRecipeRegistry.registerRecipe(ItemComponent.getStack(ItemComponent.REAGENT_BRIDGE), 600, 50, Blocks.soul_sand, Blocks.soul_sand, "stone", Blocks.obsidian);
         TartaricForgeRecipeRegistry.registerRecipe(ItemComponent.getStack(ItemComponent.REAGENT_SEVERANCE), 800, 70, Items.ender_eye, Items.ender_pearl, "ingotGold", "ingotGold");
         TartaricForgeRecipeRegistry.registerRecipe(ItemComponent.getStack(ItemComponent.REAGENT_COMPRESSION), 2000, 200, "blockIron", "blockGold", Blocks.obsidian, "cobblestone");
+        TartaricForgeRecipeRegistry.registerRecipe(ItemComponent.getStack(ItemComponent.REAGENT_TELEPOSITION), 1500, 200, ModBlocks.teleposer, "glowstone", "blockRedstone", "ingotGold");
+        TartaricForgeRecipeRegistry.registerRecipe(ItemComponent.getStack(ItemComponent.REAGENT_TRANSPOSITION), 1500, 200, ModBlocks.teleposer, "gemDiamond", Items.ender_pearl, Blocks.obsidian);
 
         TartaricForgeRecipeRegistry.registerRecipe(new ItemStack(ModItems.sentientArmourGem), 240, 150, Items.diamond_chestplate, new ItemStack(ModItems.soulGem, 1, 1), Blocks.iron_block, Blocks.obsidian);
 

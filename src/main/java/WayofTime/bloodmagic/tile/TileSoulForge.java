@@ -9,10 +9,12 @@ import net.minecraft.util.ITickable;
 import WayofTime.bloodmagic.api.Constants;
 import WayofTime.bloodmagic.api.recipe.TartaricForgeRecipe;
 import WayofTime.bloodmagic.api.registry.TartaricForgeRecipeRegistry;
+import WayofTime.bloodmagic.api.soul.EnumDemonWillType;
 import WayofTime.bloodmagic.api.soul.IDemonWill;
+import WayofTime.bloodmagic.api.soul.IDemonWillConduit;
 import WayofTime.bloodmagic.api.soul.IDemonWillGem;
 
-public class TileSoulForge extends TileInventory implements ITickable
+public class TileSoulForge extends TileInventory implements ITickable, IDemonWillConduit
 {
     public static final int ticksRequired = 100;
 
@@ -172,7 +174,7 @@ public class TileSoulForge extends TileInventory implements ITickable
             if (soulStack.getItem() instanceof IDemonWillGem)
             {
                 IDemonWillGem soul = (IDemonWillGem) soulStack.getItem();
-                return soul.getWill(soulStack);
+                return soul.getWill(EnumDemonWillType.DEFAULT, soulStack);
             }
         }
 
@@ -199,7 +201,7 @@ public class TileSoulForge extends TileInventory implements ITickable
             if (soulStack.getItem() instanceof IDemonWillGem)
             {
                 IDemonWillGem soul = (IDemonWillGem) soulStack.getItem();
-                return soul.drainWill(soulStack, requested);
+                return soul.drainWill(EnumDemonWillType.DEFAULT, soulStack, requested);
             }
         }
 
@@ -227,5 +229,89 @@ public class TileSoulForge extends TileInventory implements ITickable
                 }
             }
         }
+    }
+
+    @Override
+    public int getWeight()
+    {
+        return 50;
+    }
+
+    @Override
+    public double fillDemonWill(EnumDemonWillType type, double amount, boolean doFill)
+    {
+        if (amount <= 0)
+        {
+            return 0;
+        }
+
+        if (!canFill(type))
+        {
+            return 0;
+        }
+
+        ItemStack stack = this.getStackInSlot(soulSlot);
+        if (stack == null || !(stack.getItem() instanceof IDemonWillGem))
+        {
+            return 0;
+        }
+
+        IDemonWillGem willGem = (IDemonWillGem) stack.getItem();
+
+        double maxWill = willGem.getMaxWill(type, stack);
+        double current = willGem.getWill(type, stack);
+
+        if (!doFill)
+        {
+            return Math.min(maxWill - current, amount);
+        }
+
+        double filled = willGem.fillWill(type, stack, amount);
+
+        return filled;
+    }
+
+    @Override
+    public double drainDemonWill(EnumDemonWillType type, double amount, boolean doDrain)
+    {
+        ItemStack stack = this.getStackInSlot(soulSlot);
+        if (stack == null || !(stack.getItem() instanceof IDemonWillGem))
+        {
+            return 0;
+        }
+
+        IDemonWillGem willGem = (IDemonWillGem) stack.getItem();
+
+        double drained = amount;
+        double current = willGem.getWill(type, stack);
+        if (current < drained)
+        {
+            drained = current;
+        }
+
+        if (doDrain)
+        {
+            drained = willGem.drainWill(type, stack, drained);
+        }
+
+        return drained;
+    }
+
+    @Override
+    public boolean canFill(EnumDemonWillType type)
+    {
+        return type.equals(EnumDemonWillType.DEFAULT);
+    }
+
+    @Override
+    public boolean canDrain(EnumDemonWillType type)
+    {
+        return type.equals(EnumDemonWillType.DEFAULT);
+    }
+
+    @Override
+    public double getCurrentWill(EnumDemonWillType type)
+    {
+        return 0;
     }
 }

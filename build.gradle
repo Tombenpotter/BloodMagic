@@ -12,7 +12,7 @@ buildscript {
 
 plugins {
 	id "net.minecraftforge.gradle.forge" version "2.0.2"
-    id 'com.matthewprenger.cursegradle' version '1.0.5'
+    id 'com.matthewprenger.cursegradle' version '1.0.7'
 	id 'net.franz-becker.gradle-lombok' version '1.5'
 }
 
@@ -22,6 +22,11 @@ def build_number = 'CUSTOM'
 
 if (System.getenv('BUILD_NUMBER') != null)
     build_number = System.getenv('BUILD_NUMBER')
+
+def username = 'BloodMagicDev'
+
+if (project.hasProperty('dev_username'))
+    username = "${dev_username}"
 
 group = package_group
 archivesBaseName = mod_name
@@ -66,7 +71,8 @@ minecraft {
 
     replace "@VERSION@", project.version
     replaceIn "Constants.java"
-    replaceIn "BloodMagicAPI.java"
+
+    clientRunArgs += "--username=${username}"
 
     if (project.hasProperty('mappings_version'))
         mappings = project.mappings_version

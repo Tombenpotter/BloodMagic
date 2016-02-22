@@ -22,12 +22,13 @@ public class Constants
         public static final String X_COORD = "xCoord";
         public static final String Y_COORD = "yCoord";
         public static final String Z_COORD = "zCoord";
-        public static final String PORTAL_LOCATION ="portalLocation";
+        public static final String PORTAL_LOCATION = "portalLocation";
         public static final String ORB_TIER = "orbTier";
         public static final String CURRENT_ESSENCE = "currentEssence";
         public static final String CURRENT_RITUAL = "currentRitual";
         public static final String CURRENT_RITUAL_TAG = "currentRitualTag";
         public static final String IS_RUNNING = "isRunning";
+        public static final String IS_REDSTONED = "isStoned";
         public static final String RUNTIME = "runtime";
         public static final String DIRECTION = "direction";
         public static final String REAGENT_TANKS = "reagentTanks";
@@ -89,6 +90,7 @@ public class Constants
         public static final String SOUL_SWORD_ACTIVE_DRAIN = "soulSwordActiveDrain";
         public static final String SOUL_SWORD_DROP = "soulSwordDrop";
         public static final String SOUL_SWORD_STATIC_DROP = "soulSwordStaticDrop";
+        public static final String WILL_TYPE = "demonWillType";
 
         public static final String SOUL_FORGE_BURN = "burnTime";
         public static final String SOUL_FORGE_CONSUMED = "consumedSouls";
